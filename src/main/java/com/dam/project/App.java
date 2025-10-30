@@ -21,36 +21,22 @@ public class App extends Application {
     public void start(Stage stage) {
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-
-        // Input
         Set<String> keys = new HashSet<>();
 
-        // Player centrado
         Player player = new Player(WIDTH / 2.0 - 18, HEIGHT / 2.0 - 18);
 
-        // Escena
         StackPane root = new StackPane(canvas);
         Scene scene = new Scene(root);
 
-        // Gestion de teclas
-        scene.setOnKeyPressed(e -> {
-            String code = e.getCode().toString();
-            keys.add(code);
-        });
-        scene.setOnKeyReleased(e -> {
-            String code = e.getCode().toString();
-            keys.remove(code);
-        });
+        scene.setOnKeyPressed(e -> keys.add(e.getCode().toString()));
+        scene.setOnKeyReleased(e -> keys.remove(e.getCode().toString()));
 
-        // Game loop
-        GameLoop loop = new GameLoop(gc, player, keys);
+        GameLoop loop = new GameLoop(gc, player, keys, WIDTH, HEIGHT);
         loop.start();
 
         stage.setTitle("Layla's Fate");
         stage.setScene(scene);
         stage.show();
-
-        // Foco para recibir teclas
         canvas.requestFocus();
     }
 
