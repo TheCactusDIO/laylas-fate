@@ -6,22 +6,20 @@ public class DatabaseManager {
     private final String url;
 
     public DatabaseManager(String dbPath) {
-        this.url = dbPath; // ej: ""jdbc:sqlite:laylas_fate.db""
+        this.url = dbPath; // ej: "jdbc:sqlite:laylas_fate.db"
         init();
     }
 
     private void init() {
         try (Connection con = DriverManager.getConnection(url);
              Statement st = con.createStatement()) {
-            st.execute("""
-                CREATE TABLE IF NOT EXISTS scores (
-                  id INTEGER PRIMARY KEY AUTOINCREMENT,
-                  name TEXT,
-                  points INTEGER,
-                  survival_time REAL,
-                  created_at TEXT
-                )
-            """);
+            String ddl = "CREATE TABLE IF NOT EXISTS scores (" +
+                         "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                         "name TEXT," +
+                         "points INTEGER," +
+                         "survival_time REAL," +
+                         "created_at TEXT)";
+            st.execute(ddl);
         } catch (SQLException e) {
             e.printStackTrace();
         }
