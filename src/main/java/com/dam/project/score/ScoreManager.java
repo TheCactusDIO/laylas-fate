@@ -2,11 +2,22 @@ package com.dam.project.score;
 
 public class ScoreManager {
     private int points = 0;
-    private double time = 0;
+    private double time = 0.0;
 
-    public void addTime(double dt) { time += dt; }
-    public void addKill(int base, double phaseMultiplier) { points += (int)Math.round(base * phaseMultiplier); }
+    public void update(double dt) {
+        time += dt;
+        points += (int)Math.floor(dt); // +1/segundo aprox
+    }
 
-    public int getPoints() { return points + (int)Math.floor(time); }
-    public double getSurvivalTime() { return time; }
+    public void addKill(int value) {
+        points += value;
+    }
+
+    public void reset() {
+        points = 0;
+        time = 0;
+    }
+
+    public int getPoints() { return points; }
+    public double getTime() { return time; }
 }
