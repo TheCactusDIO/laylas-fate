@@ -1,23 +1,25 @@
 package com.dam.project.score;
 
 public class ScoreManager {
-    private int points = 0;
-    private double time = 0.0;
+    private int killPoints = 0;
+    private double time = 0.0; // segundos acumulados
 
     public void update(double dt) {
-        time += dt;
-        points += (int)Math.floor(dt); // +1/segundo aprox
+        time += dt; // el +1 por segundo lo calculamos al pedir el total
     }
 
-    public void addKill(int value) {
-        points += value;
-    }
+    /** +value por kill (p.ej. 10) */
+    public void addKill(int value) { killPoints += value; }
 
     public void reset() {
-        points = 0;
-        time = 0;
+        killPoints = 0;
+        time = 0.0;
     }
 
-    public int getPoints() { return points; }
+    /** Total = kills + segundos enteros vividos */
+    public int getPoints() {
+        return killPoints + (int)Math.floor(time);
+    }
+
     public double getTime() { return time; }
 }
