@@ -10,14 +10,27 @@ public class ScoreRepository {
 
     public ScoreRepository(DatabaseManager db) { this.db = db; }
 
+    private void ensureSchema(Connection con) throws SQLException {
+        try (Statement st = con.createStatement()) {
+            st.execute("CREATE TABLE IF NOT EXISTS scores (" +
+                       "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                       "name TEXT," +
+                       "points INTEGER," +
+                       "survival_time REAL," +
+                       "created_at TEXT)");
+        }
+    }
+
     public void insert(String name, int points, double survivalTime) {
         final String sql = "INSERT INTO scores (name, points, survival_time, created_at) VALUES (?, ?, ?, datetime('now'))";
-        try (Connection con = db.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, name);
-            ps.setInt(2, points);
-            ps.setDouble(3, survivalTime);
-            ps.executeUpdate();
+        try (Connection con = db.getConnection()) {
+            ensureSchema(con);
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setString(1, name);
+                ps.setInt(2, points);
+                ps.setDouble(3, survivalTime);
+                ps.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -26,17 +39,19 @@ public class ScoreRepository {
     public List<Score> topN(int n) {
         List<Score> out = new ArrayList<>();
         final String sql = "SELECT name, points, survival_time, created_at FROM scores ORDER BY points DESC LIMIT ?";
-        try (Connection con = db.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, n);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    out.add(new Score(
-                        rs.getString("name"),
-                        rs.getInt("points"),
-                        rs.getDouble("survival_time"),
-                        rs.getString("created_at")
-                    ));
+        try (Connection con = db.getConnection()) {
+            ensureSchema(con);
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, n);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        out.add(new Score(
+                            rs.getString("name"),
+                            rs.getInt("points"),
+                            rs.getDouble("survival_time"),
+                            rs.getString("created_at")
+                        ));
+                    }
                 }
             }
         } catch (SQLException e) {
