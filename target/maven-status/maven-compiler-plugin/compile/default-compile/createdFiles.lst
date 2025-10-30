@@ -4,10 +4,12 @@ com\dam\project\ui\ScoreTable.class
 com\dam\project\score\Score.class
 com\dam\project\db\ScoreRepository.class
 com\dam\project\engine\EnemySpawner.class
+com\dam\project\ui\LeaderboardScene$ScoreRow.class
 com\dam\project\entities\Enemy.class
 com\dam\project\engine\GameLoop.class
 com\dam\project\entities\Player.class
 com\dam\project\ui\ScoreSaveDialog.class
+com\dam\project\ui\LeaderboardScene.class
 com\dam\project\combat\AttackController.class
 com\dam\project\ui\MainMenuView.class
 com\dam\project\App.class
